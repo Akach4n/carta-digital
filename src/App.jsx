@@ -6,6 +6,7 @@ function App() {
   const [platoSeleccionado, setPlatoSeleccionado] = useState(null);
   const [pedido, setPedido] = useState([]);
   const [carritoAbierto, setCarritoAbierto] = useState(false);
+  const [pedidoConfirmado, setPedidoConfirmado] = useState(false);
 
   /* ================= ESTADOS Y LOGICA DEL PEDIDO ================= */
   const agregarAlPedido = (plato) => {
@@ -19,6 +20,16 @@ function App() {
       return [...pedidoActual, { ...plato, cantidad: 1 }];
     });
   };
+
+  const manejarConfirmarPedido = () => {
+    setPedidoConfirmado(true);
+
+    setTimeout(() => {
+      setPedidoConfirmado(false);
+      setPedido([]);
+    }, 2000);
+  };
+
 
   const restarDelPedido = (id) => {
     setPedido((pedidoActual) => {
@@ -185,12 +196,26 @@ function App() {
               onClick={() => setPedido([])}
               className="w-full bg-red-950/40 border border-red-500/30 hover:bg-red-600 hover:text-white disabled:bg-slate-800 disabled:text-gray-600 disabled:border-transparent disabled:cursor-not-allowed text-red-200 font-bold py-3 rounded-xl transition-all cursor-pointer text-center"
             >Vaciar carrito </button>
-            <button
-              disabled={pedido.length === 0}
-              className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-slate-800 disabled:text-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-all cursor-pointer text-center"
-            >
-              Confirmar Pedido
-            </button>
+            {pedidoConfirmado ? (
+              <div className="flex items-center justify-center gap-2 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl w-full">
+                <svg
+                  className="w-5 h-5 stroke-current fill-none text-emerald-400 animate-bounce"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2.5"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span className="text-emerald-400 font-bold">Pedido confirmado</span>
+              </div>
+            ) : (
+              <button
+                disabled={pedido.length === 0}
+                onClick={manejarConfirmarPedido} // <-- Vinculamos la nueva función aquí
+                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-slate-800 disabled:text-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-all cursor-pointer text-center"
+              >
+                Confirmar Pedido
+              </button>
+            )}
           </div>
         </div>
       </div>
